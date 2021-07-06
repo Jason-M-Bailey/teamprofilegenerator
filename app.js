@@ -7,7 +7,7 @@ const Manager = require("./lib/Manager");
 const employees = [];
 
 //
-function initApp() {
+function initializeApp() {
   startHtml();
   addMember();
 }
@@ -19,7 +19,9 @@ function addMember() {
         message: "What is your new team member's name:",
         name: "name",
         // look up documentation for required fields - strings 
+        
       },
+
       {
         type: "list",
         message: "Select the team member's role:",
@@ -35,6 +37,7 @@ function addMember() {
         name: "email",
       },
     ])
+    
     .then(function ({ name, role, id, email }) {
       let roleInfo = "";
       if (role === "Engineer") {
@@ -77,14 +80,6 @@ function addMember() {
         });
     });
 }
-
-// function renderHtml(memberArray) {
-//     startHtml();
-//     for (const member of memberArray) {
-//         addHtml(member);
-//     }
-//     finishHtml();
-// }
 
 function startHtml() {
   const html = `<!DOCTYPE html>
@@ -179,10 +174,4 @@ function finishHtml() {
   console.log("end");
 }
 
-// addMember();
-// startHtml();
-// addHtml("hi")
-// .then(function() {
-// finishHtml();
-// });
-initApp();
+initializeApp();
