@@ -19,7 +19,7 @@ function addMember() {
   inquirer
     .prompt([
       {
-        message: "What is your new team member's name:",
+        message: "What is your team member's name:",
         name: "name",
         // look up documentation for required fields - strings
       },
