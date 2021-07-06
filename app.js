@@ -1,25 +1,27 @@
+// add all your global variables 
 const inquirer = require("inquirer");
 const fs = require("fs");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
+// create empty array for new employees to be pushed into
 const employees = [];
 
-//
+// run functions 
 function initializeApp() {
   startHtml();
   addMember();
 }
 
+// inquirer prompts to collect info about new member 
 function addMember() {
   inquirer
     .prompt([
       {
         message: "What is your new team member's name:",
         name: "name",
-        // look up documentation for required fields - strings 
-        
+        // look up documentation for required fields - strings
       },
 
       {
@@ -37,14 +39,15 @@ function addMember() {
         name: "email",
       },
     ])
-    
+
+    // if else to determine employee's role and question unique to them 
     .then(function ({ name, role, id, email }) {
       let roleInfo = "";
       if (role === "Engineer") {
         roleInfo = "GitHub username:";
       } else if (role === "Intern") {
         roleInfo = "school name:";
-      } else {
+      } else { // manager question as final option 
         roleInfo = "office phone number:";
       }
       inquirer
@@ -60,6 +63,8 @@ function addMember() {
             name: "moreMembers",
           },
         ])
+
+
         .then(function ({ roleInfo, moreMembers }) {
           let newMember;
           if (role === "Engineer") {
@@ -69,7 +74,11 @@ function addMember() {
           } else {
             newMember = new Manager(name, id, email, roleInfo);
           }
+
+          // add new employee info to array
           employees.push(newMember);
+
+
           addHtml(newMember).then(function () {
             if (moreMembers === "yes") {
               addMember();
@@ -104,6 +113,8 @@ function startHtml() {
   });
   console.log("start");
 }
+
+
 
 function addHtml(member) {
   return new Promise(function (resolve, reject) {
