@@ -1,4 +1,4 @@
-// add all your global variables 
+// add all your global variables
 const inquirer = require("inquirer");
 const fs = require("fs");
 const Engineer = require("./lib/Engineer");
@@ -8,13 +8,13 @@ const Manager = require("./lib/Manager");
 // create empty array for new employees to be pushed into
 const employees = [];
 
-// run functions 
+// run functions
 function initializeApp() {
   startHtml();
   addMember();
 }
 
-// inquirer prompts to collect info about new member 
+// inquirer prompts to collect info about new member
 function addMember() {
   inquirer
     .prompt([
@@ -23,7 +23,6 @@ function addMember() {
         name: "name",
         // look up documentation for required fields - strings
       },
-
       {
         type: "list",
         message: "Select the team member's role:",
@@ -40,14 +39,15 @@ function addMember() {
       },
     ])
 
-    // if else to determine employee's role and question unique to them 
+    // if else to determine employee's role and question unique to them
     .then(function ({ name, role, id, email }) {
       let roleInfo = "";
       if (role === "Engineer") {
         roleInfo = "GitHub username:";
       } else if (role === "Intern") {
         roleInfo = "school name:";
-      } else { // manager question as final option 
+      } else {
+        // manager question as final option
         roleInfo = "office phone number:";
       }
       inquirer
@@ -64,7 +64,6 @@ function addMember() {
           },
         ])
 
-
         .then(function ({ roleInfo, moreMembers }) {
           let newMember;
           if (role === "Engineer") {
@@ -77,7 +76,6 @@ function addMember() {
 
           // add new employee info to array
           employees.push(newMember);
-
 
           addHtml(newMember).then(function () {
             if (moreMembers === "yes") {
@@ -114,8 +112,6 @@ function startHtml() {
   console.log("start");
 }
 
-
-
 function addHtml(member) {
   return new Promise(function (resolve, reject) {
     const name = member.getName();
@@ -130,7 +126,7 @@ function addHtml(member) {
             <h5 class="card-header">${name}<br /><br />Engineer</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
-                <li class="list-group-item">Email Address: ${email}</li>
+                <li class="list-group-item"><a href="mailto:${email}">Email Address: ${email}</a></li>
                 <li class="list-group-item">GitHub: ${gitHub}</li>
             </ul>
             </div>
@@ -142,7 +138,7 @@ function addHtml(member) {
             <h5 class="card-header">${name}<br /><br />Intern</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
-                <li class="list-group-item">Email Address: ${email}</li>
+                <li class="list-group-item"><a href="mailto:${email}">Email Address: ${email}</a></li>
                 <li class="list-group-item">School: ${school}</li>
             </ul>
             </div>
@@ -154,7 +150,7 @@ function addHtml(member) {
             <h5 class="card-header">${name}<br /><br />Manager</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
-                <li class="list-group-item">Email Address: ${email}</li>
+                <li class="list-group-item"><a href="mailto:${email}">Email Address: ${email}</a></li>
                 <li class="list-group-item">Office Phone: ${officePhone}</li>
             </ul>
             </div>
