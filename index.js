@@ -18,8 +18,6 @@ function initializeApp() {
 // CHANGE FLOW TO THE README INSTRUCTIONS
 // fix naming conventions to uppercase first letter of name
 function addMember() {
-  
-
   inquirer
     .prompt([
       {
@@ -54,14 +52,15 @@ function addMember() {
         name: "email",
         // https://stackoverflow.com/questions/65189877/how-can-i-validate-that-a-user-input-their-email-when-using-inquirer-npm
         validate: (answer) => {
-          
           // Regex mail check (return true if valid mail)
-          const pass = answer.match(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/);
-
+          const pass = answer.match(
+            /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/
+          );
           if (pass) {
             return true;
-          } return "Enter a valid email";
-          },
+          }
+          return "Enter a valid email";
+        },
       },
     ])
 
@@ -81,12 +80,26 @@ function addMember() {
         questions.unshift({
           message: `Enter team member's ${roleInfo}`,
           name: "roleInfo",
+          validate: (answer) => {
+            const pass = answer.match(/[0-9a-zA-Z]{4,}/);
+            if (pass) {
+              return true;
+            }
+            return "Github usernames must have 4 characters or more.";
+            // https://github.com/moby/moby/issues/8399 - resource states minimum name is 4 characters
+          },
         });
       } else if (role === "Intern") {
         roleInfo = "school name:";
         questions.unshift({
           message: `Enter team member's ${roleInfo}`,
           name: "roleInfo",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            }
+            return "School names must have one character or more.";
+          },
         });
       } else {
         // manager question as final option
@@ -96,7 +109,7 @@ function addMember() {
           message: `Enter team member's ${roleInfo}`,
           name: "roleInfo",
         });
-       }
+      }
 
       inquirer.prompt(questions).then(function ({ roleInfo, moreMembers }) {
         let newMember;
