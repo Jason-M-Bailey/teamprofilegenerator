@@ -38,6 +38,7 @@ function addMember() {
       {
         message: "Enter your team member's email address:",
         name: "email",
+        // https://stackoverflow.com/questions/65189877/how-can-i-validate-that-a-user-input-their-email-when-using-inquirer-npm
       },
     ])
 
@@ -51,6 +52,10 @@ function addMember() {
       } else {
         // manager question as final option
         roleInfo = "office phone number:";
+        // how to validate phone number - require 10 digits?
+        // https://www.codegrepper.com/search.php?q=phone%20number%20validation%20javascript
+        // 
+        // https://www.codegrepper.com/search.php?q=10%20digit%20mobile%20number%20validation%20pattern%20in%20javascript
       }
       inquirer
         .prompt([
