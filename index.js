@@ -44,54 +44,68 @@ function addMember() {
 
     // if else to determine employee's role and question unique to them
     .then(function ({ name, role, id, email }) {
+      let questions = [
+        {
+          type: "list",
+          message: "Would you like to add more team members?",
+          choices: ["yes", "no"],
+          name: "moreMembers",
+        },
+      ];
       let roleInfo = "";
       if (role === "Engineer") {
-        roleInfo = "GitHub username:";
+        roleInfo = "GitHub username:"; // github = "github username" - only ask if engineer
+        questions.unshift({
+          message: `Enter team member's ${roleInfo}`,
+          name: "roleInfo",
+        });
       } else if (role === "Intern") {
         roleInfo = "school name:";
+        questions.unshift({
+          message: `Enter team member's ${roleInfo}`,
+          name: "roleInfo",
+        });
       } else {
         // manager question as final option
-        roleInfo = "office phone number:";
+        roleInfo = "10 digit office phone number:";
+
+        questions.unshift({
+          message: `Enter team member's ${roleInfo}`,
+          name: "roleInfo",
+          validate: function (phoneNumber) {
+            var pattern = /^[(]*[0-9]{3}[)]*[-\s]*[0-9]{3}[-\s]*[0-9]{4}$/im;
+            console.log(pattern.test(phoneNumber));
+            return pattern.test(phoneNumber); // returns a boolean
+          },
+        });
         // how to validate phone number - require 10 digits?
+
         // https://www.codegrepper.com/search.php?q=phone%20number%20validation%20javascript
-        // 
+        //
         // https://www.codegrepper.com/search.php?q=10%20digit%20mobile%20number%20validation%20pattern%20in%20javascript
       }
-      inquirer
-        .prompt([
-          {
-            message: `Enter team member's ${roleInfo}`,
-            name: "roleInfo",
-          },
-          {
-            type: "list",
-            message: "Would you like to add more team members?",
-            choices: ["yes", "no"],
-            name: "moreMembers",
-          },
-        ])
 
-        .then(function ({ roleInfo, moreMembers }) {
-          let newMember;
-          if (role === "Engineer") {
-            newMember = new Engineer(name, id, email, roleInfo);
-          } else if (role === "Intern") {
-            newMember = new Intern(name, id, email, roleInfo);
+      inquirer.prompt(questions).then(function ({ roleInfo, moreMembers }) {
+        let newMember;
+        if (role === "Engineer") {
+          newMember = new Engineer(name, id, email, roleInfo);
+        } else if (role === "Intern") {
+          newMember = new Intern(name, id, email, roleInfo);
+        } else {
+          newMember = new Manager(name, id, email, roleInfo);
+        }
+
+        // add new employee info to array
+        employees.push(newMember);
+
+        addHtml(newMember).then(function () {
+          if (moreMembers === "yes") {
+            addMember();
           } else {
-            newMember = new Manager(name, id, email, roleInfo);
+            finishHtml();
           }
-
-          // add new employee info to array
-          employees.push(newMember);
-
-          addHtml(newMember).then(function () {
-            if (moreMembers === "yes") {
-              addMember();
-            } else {
-              finishHtml();
-            }
-          });
         });
+      });
     });
 }
 
@@ -134,7 +148,7 @@ function addHtml(member) {
             <h5 class="card-header">${name}<br /><br />Engineer</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
-                <li class="list-group-item"><a href="mailto:${email}">Email Address: ${email}</a></li>
+                <li class="list-group-item">Email Address: <a href="mailto:${email}">${email}</a></li>
                 <li class="list-group-item">GitHub: <a href="https://github.com/${gitHub}">${gitHub}</a></li>
             </ul>
             </div>
@@ -146,7 +160,7 @@ function addHtml(member) {
             <h5 class="card-header">${name}<br /><br />Intern</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
-                <li class="list-group-item"><a href="mailto:${email}">Email Address: ${email}</a></li>
+                <li class="list-group-item">Email Address: <a href="mailto:${email}">${email}</a></li>
                 <li class="list-group-item">School: ${school}</li>
             </ul>
             </div>
@@ -158,7 +172,7 @@ function addHtml(member) {
             <h5 class="card-header">${name}<br /><br />Manager</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
-                <li class="list-group-item"><a href="mailto:${email}">Email Address: ${email}</a></li>
+                <li class="list-group-item">Email Address: <a href="mailto:${email}">${email}</a></li>
                 <li class="list-group-item">Office Phone: ${officePhone}</li>
             </ul>
             </div>

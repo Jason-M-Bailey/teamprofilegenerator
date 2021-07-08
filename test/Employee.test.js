@@ -8,9 +8,23 @@ describe("Employee", () => {
 
   it("Can set name via constructor arguments", () => {
     const name = "Alice";
-    const e = new Employee(name);
+    const e = new Employee(name);   
     expect(e.name).toBe(name);
   });
+
+  // 
+  it("testing undefined", () => {
+    const e = new Employee();
+    expect(e.email).toBe(undefined);
+  })
+
+  it("testing null", () => {
+    const email = null;
+    const e = new Employee(null, null, email);
+    expect(e.email).toBe(null);
+  })
+
+  //
 
   it("Can set id via constructor argument", () => {
     const testValue = 100;
