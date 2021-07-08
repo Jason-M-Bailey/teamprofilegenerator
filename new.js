@@ -29,7 +29,7 @@ function addMember() {
           if (answer !== "") {
             return true;
           }
-          return "Names must have one character or more.";
+          return "Please enter at least one character.";
         },
       },
       {
@@ -41,27 +41,11 @@ function addMember() {
       {
         message: "Enter your team member's id:",
         name: "id",
-        validate: (answer) => {
-          const pass = answer.match(/^[1-9]\d*$/);
-          if (pass) {
-            return true;
-          }
-          return "IDs must be a number greater than zero.";
-        },
       },
       {
         message: "Enter your team member's email address:",
         name: "email",
         // https://stackoverflow.com/questions/65189877/how-can-i-validate-that-a-user-input-their-email-when-using-inquirer-npm
-        validate: (answer) => {
-          
-          // Regex mail check (return true if valid mail)
-          const pass = answer.match(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/);
-
-          if (pass) {
-            return true;
-          } return "Enter a valid email";
-          },
       },
     ])
 
@@ -143,7 +127,7 @@ function startHtml() {
       console.log(err);
     }
   });
-  console.log("Start building your team with the Manager role first:");
+  console.log("Start building your team:");
 }
 
 function addHtml(member) {
