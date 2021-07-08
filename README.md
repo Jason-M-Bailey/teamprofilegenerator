@@ -8,7 +8,7 @@ Testing was used to make code maintainable, I wrote a unit test for every part o
 
 Because this application is not deployed, a link is provided to a walkthrough video that demonstrates its functionality and all of the tests passing. 
 
-[Walkthrough Video]()
+[Walkthrough Video](https://drive.google.com/file/d/1N2cOs-j63F9OzjfetqceHvn0LRCjjDau/view)
 
 ## User Story
 
