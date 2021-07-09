@@ -11,7 +11,130 @@ const employees = [];
 // run functions
 function initializeApp() {
   startHtml();
-  addMember();
+  addManager();
+  // addMember();
+}
+
+function addManager() {
+  inquirer
+    .prompt([
+      {
+        message: "What is the manager's name:",
+        name: "name",
+        validate: (answer) => {
+          if (answer !== "") {
+            return true;
+          }
+          return "Names must have one character or more.";
+        },
+      },
+      {
+        message: "Enter the manager's id:",
+        name: "id",
+        validate: (answer) => {
+          const pass = answer.match(/^[1-9]\d*$/);
+          if (pass) {
+            return true;
+          }
+          return "IDs must be a number greater than zero.";
+        },
+      },
+      {
+        message: "Enter your the manager's email address:",
+        name: "email",
+        validate: (answer) => {
+          // Regex mail check (return true if valid mail)
+          const pass = answer.match(
+            // /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/
+
+            /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/
+          );
+          if (pass) {
+            return true;
+          }
+          return "Enter a valid email";
+        },
+      },
+    ])
+
+    // if else to determine employee's role and question unique to them
+    .then(function ({ name, role, id, email }) {
+      let questions = [
+        {
+          type: "list",
+          message: "Would you like to add more team members?",
+          choices: ["yes", "no"],
+          name: "moreMembers",
+        },
+      ];
+      let roleInfo = "";
+
+
+      if (role === "Engineer") {
+        roleInfo = "GitHub username:"; // github = "github username" - only ask if engineer
+        questions.unshift({
+          message: `Enter team member's ${roleInfo}`,
+          name: "roleInfo",
+          validate: (answer) => {
+            const pass = answer.match(/[0-9a-zA-Z]{4,}/);
+            if (pass) {
+              return true;
+            }
+            return "Github usernames must have 4 characters or more.";
+            // https://github.com/moby/moby/issues/8399 - resource states minimum name is 4 characters
+          },
+        });
+      } else if (role === "Intern") {
+        roleInfo = "school name:";
+        questions.unshift({
+          message: `Enter team member's ${roleInfo}`,
+          name: "roleInfo",
+          validate: (answer) => {
+            if (answer !== "") {
+              return true;
+            }
+            return "School names must have one character or more.";
+          },
+        });
+      } else {
+        // manager question as final option
+        roleInfo = "office number:";
+
+        questions.unshift({
+          message: `Enter team member's ${roleInfo}`,
+          name: "roleInfo",
+          validate: (answer) => {
+            const pass = answer.match(/^[1-9]\d*$/);
+            if (pass) {
+              return true;
+            }
+            return "Office number must be a number greater than zero.";
+          },
+        });
+      }
+
+      inquirer.prompt(questions).then(function ({ roleInfo, moreMembers }) {
+        let newMember;
+        if (role === "Engineer") {
+          newMember = new Engineer(name, id, email, roleInfo);
+        } else if (role === "Intern") {
+          newMember = new Intern(name, id, email, roleInfo);
+        } else {
+          newMember = new Manager(name, id, email, roleInfo);
+        }
+
+        // add new employee info to array
+        employees.push(newMember);
+
+        addHtml(newMember).then(function () {
+          if (moreMembers === "yes") {
+            addMember();
+          } else {
+            finishHtml();
+          }
+        });
+      });
+    });
 }
 
 // inquirer prompts to collect info about new member
@@ -23,11 +146,11 @@ function addMember() {
       {
         type: "list",
         message: "Select the team member's role:",
-        choices: ["Engineer", "Intern", "Manager"],
+        choices: ["Engineer", "Intern"],
         name: "role",
       },
       {
-        message: "What is the team member's name:",
+        message: "What is your team member's name:",
         name: "name",
         validate: (answer) => {
           if (answer !== "") {
@@ -37,7 +160,7 @@ function addMember() {
         },
       },
       {
-        message: "Enter the team member's id:",
+        message: "Enter your team member's id:",
         name: "id",
         validate: (answer) => {
           const pass = answer.match(/^[1-9]\d*$/);
@@ -50,14 +173,12 @@ function addMember() {
       {
         message: "Enter your team member's email address:",
         name: "email",
+        // https://stackoverflow.com/questions/65189877/how-can-i-validate-that-a-user-input-their-email-when-using-inquirer-npm
         validate: (answer) => {
-          // Regex email check (return true if valid mail)
+          // Regex mail check (return true if valid mail)
           const pass = answer.match(
-            
-            // https://stackoverflow.com/questions/65189877/how-can-i-validate-that-a-user-input-their-email-when-using-inquirer-npm
             // /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/
 
-            // http://emailregex.com/
             /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/
           );
           if (pass) {
@@ -112,6 +233,13 @@ function addMember() {
         questions.unshift({
           message: `Enter team member's ${roleInfo}`,
           name: "roleInfo",
+          validate: (answer) => {
+            const pass = answer.match(/^[1-9]\d*$/);
+            if (pass) {
+              return true;
+            }
+            return "Office number must be a number greater than zero.";
+          },
         });
       }
 
