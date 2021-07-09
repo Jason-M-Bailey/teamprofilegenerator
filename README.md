@@ -4,11 +4,11 @@
 
 The task was to build a Node.js command-line application that takes in information about employees on a software engineering team, then generates an HTML webpage that displays summaries for each person. 
 
-Testing was used to make code maintainable, I wrote a unit test for every part of the code to ensure that it passes each test. ❓
+Testing was used to make code maintainable, I wrote a unit test for every part of the code to ensure that it passes each test. ✅ 
 
 Because this application is not deployed, a link is provided to a walkthrough video that demonstrates its functionality and all of the tests passing. 
 
-[Walkthrough Video](https://drive.google.com/file/d/1N2cOs-j63F9OzjfetqceHvn0LRCjjDau/view)
+[Walkthrough Video](https://drive.google.com/file/d/1Ol2HN7cZ72-iLyj6zXldxW-NKQlEaD7P/view)
 
 ## User Story
 
@@ -28,17 +28,15 @@ WHEN I click on an email address in the HTML
 THEN my default email program opens and populates the TO field of the email with the address ✅ 
 WHEN I click on the GitHub username
 THEN that GitHub profile opens in a new tab ✅ 
---- change structure to require manager first then ask to add other roles 
-
-WHEN I start the application ❓
+WHEN I start the application ✅ 
 THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number ✅
-WHEN I enter the team manager’s name, employee ID, email address, and office number 
+WHEN I enter the team manager’s name, employee ID, email address, and office number ✅ 
 THEN I am presented with a menu with the option to add an engineer or an intern or to finish building my team ✅
-WHEN I select the engineer option
+WHEN I select the engineer option ✅ 
 THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu ✅
-WHEN I select the intern option
+WHEN I select the intern option ✅ 
 THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu ✅
-WHEN I decide to finish building my team
+WHEN I decide to finish building my team ✅ 
 THEN I exit the application, and the HTML is generated ✅
 ```
 
@@ -93,7 +91,7 @@ In addition to `Employee`'s properties and methods, `Intern` will also have the 
 
 * `getRole()`&mdash;overridden to return `'Intern'` ✅ 
 
-Finally, although it’s not a requirement, consider adding validation to ensure that user input is in the proper format. ❌
+Finally, although it’s not a requirement, consider adding validation to ensure that user input is in the proper format. ✅ 
 
 ## Grading Requirements
 
@@ -101,7 +99,7 @@ Finally, although it’s not a requirement, consider adding validation to ensure
 
 * A sample HTML file generated using the application must be submitted.
 
-* Your GitHub repository containing your application code.
+* Your GitHub repository containing your application code. ✅ 
 
 
 ### Walkthrough Video: 32%
